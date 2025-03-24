@@ -28,7 +28,7 @@ export default function ChangeAdminInfoDesk() {
     <>
       <div className="flex flex-col min-h-screen">
         {/* 헤더 */}
-        <div className="text-center py-5 text-[28px] font-bold border-b border-gray-300 w-full">
+        <div className="text-center py-7.5 text-[35px] font-bold border-b border-gray-300 w-full">
           관리자 정보 변경
         </div>
 
@@ -68,7 +68,7 @@ export default function ChangeAdminInfoDesk() {
             />
           </>
 
-          <div className="flex justify-between mt-20 font-bold">
+          <div className="flex justify-between mt-25 font-bold">
             {/* 취소 버튼 */}
             <CancelButton link="/admin/admin-main" />
 

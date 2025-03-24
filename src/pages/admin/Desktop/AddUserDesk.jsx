@@ -27,7 +27,7 @@ export default function AddUserDesk() {
     <>
       <div className="flex flex-col min-h-screen">
         {/* 헤더 */}
-        <div className="text-center py-5 text-[28px] font-bold border-b border-gray-300 w-full">
+        <div className="text-center py-7.5 text-[35px] font-bold border-b border-gray-300 w-full">
           회원 추가
         </div>
 
