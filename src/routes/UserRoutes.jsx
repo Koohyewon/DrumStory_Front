@@ -1,25 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDevice } from "../utils/useDevice";
 
+import MainDesk from "../pages/user/Desktop/MainDesk";
+
 export default function UserRoutes() {
   const device = useDevice();
 
   return (
-    <Router>
-      <Routes>
-        {/* <Route
-          path="/"
-          element={
-            device === "mobile" ? <UserHomeMobile /> : <UserHomeDesktop />
-          }
-        />        
-        <Route
-          path="/profile"
-          element={
-            device === "mobile" ? <UserProfileMobile /> : <UserProfileDesktop />
-          }
-        /> */}
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={device === "mobile" ? <UserHomeMobile /> : <MainDesk />}
+      />
+    </Routes>
   );
 }

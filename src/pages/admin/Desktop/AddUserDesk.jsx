@@ -19,7 +19,7 @@ export default function AddUserDesk() {
     }));
   };
 
-  const handleActionClick = () => {
+  const handleAdd = () => {
     console.log(addUserForm);
   };
 
@@ -65,7 +65,7 @@ export default function AddUserDesk() {
 
             {/* 설정 버튼 */}
             <div className="ml-10">
-              <ActionButton text="추가" onClick={handleActionClick} />
+              <ActionButton text="추가" onClick={handleAdd} />
             </div>
           </div>
         </div>

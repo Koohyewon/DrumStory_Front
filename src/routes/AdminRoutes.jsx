@@ -10,44 +10,42 @@ export default function AdminRoutes() {
   const device = useDevice();
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/admin/admin-main"
-          element={
-            device === "mobile" ? <AdminDashboardMobile /> : <AdminMainDesk />
-          }
-        />
+    <Routes>
+      <Route
+        path="admin-main"
+        element={
+          device === "mobile" ? <AdminDashboardMobile /> : <AdminMainDesk />
+        }
+      />
 
-        <Route
-          path="/admin/change-admin-info"
-          element={
-            device === "mobile" ? (
-              <AdminDashboardMobile />
-            ) : (
-              <ChangeAdminInfoDesk />
-            )
-          }
-        />
+      <Route
+        path="change-admin-info"
+        element={
+          device === "mobile" ? (
+            <AdminDashboardMobile />
+          ) : (
+            <ChangeAdminInfoDesk />
+          )
+        }
+      />
 
-        <Route
-          path="/admin/add-user"
-          element={
-            device === "mobile" ? <AdminDashboardMobile /> : <AddUserDesk />
-          }
-        />
+      <Route
+        path="add-user"
+        element={
+          device === "mobile" ? <AdminDashboardMobile /> : <AddUserDesk />
+        }
+      />
 
-        <Route
-          path="/admin/user-management"
-          element={
-            device === "mobile" ? (
-              <AdminDashboardMobile />
-            ) : (
-              <UserManagementDesk />
-            )
-          }
-        />
-      </Routes>
-    </Router>
+      <Route
+        path="user-management"
+        element={
+          device === "mobile" ? (
+            <AdminDashboardMobile />
+          ) : (
+            <UserManagementDesk />
+          )
+        }
+      />
+    </Routes>
   );
 }

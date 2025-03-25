@@ -32,7 +32,7 @@ export default function ChangeAdminInfoDesk() {
           관리자 정보 변경
         </div>
 
-        <div className="flex flex-col items-center justify-center flex-grow">
+        <div className="my-15 flex flex-col items-center justify-center flex-grow">
           {/* 입력 폼 */}
           <>
             <InputField
@@ -68,7 +68,7 @@ export default function ChangeAdminInfoDesk() {
             />
           </>
 
-          <div className="flex justify-between mt-25 font-bold">
+          <div className="flex justify-between mt-20 font-bold">
             {/* 취소 버튼 */}
             <CancelButton link="/admin/admin-main" />
 
