@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import InputField from "../../../components/InputField";
 import CancelButton from "../../../components/CancelButton";
 import ActionButton from "../../../components/ActionButton";
+import axios from "../../../api/axiosInstance";
 
 export default function ChangeAdminInfoDesk() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     existingId: "",
     newId: "",
@@ -20,9 +24,33 @@ export default function ChangeAdminInfoDesk() {
     }));
   };
 
-  const handleActionClick = () => {
-    console.log(form);
+  const editAdmin = async () => {
+    if (
+      !form.adminName ||
+      !form.adminPhone ||
+      !form.newId ||
+      !form.existingId
+    ) {
+      return;
+    }
+
+    const data = {
+      name: form.adminName,
+      phoneNumber: form.adminPhone,
+      memberNum: form.newId,
+      oldMemberNum: form.existingId,
+    };
+
+    try {
+      await axios.put("/admin/member/update", data);
+      navigate("/admin");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const isFormValid =
+    form.adminName && form.adminPhone && form.newId && form.existingId;
 
   return (
     <>
@@ -74,7 +102,11 @@ export default function ChangeAdminInfoDesk() {
 
             {/* 설정 버튼 */}
             <div className="ml-10">
-              <ActionButton text="설정" onClick={handleActionClick} />
+              <ActionButton
+                text="설정"
+                onClick={editAdmin}
+                disabled={!isFormValid}
+              />
             </div>
           </div>
         </div>
