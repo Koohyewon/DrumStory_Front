@@ -11,41 +11,17 @@ export default function AdminRoutes() {
 
   return (
     <Routes>
-      <Route
+      {/* <Route
         path="admin-main"
         element={
           device === "mobile" ? <AdminDashboardMobile /> : <AdminMainDesk />
         }
-      />
+      /> */}
 
-      <Route
-        path="change-admin-info"
-        element={
-          device === "mobile" ? (
-            <AdminDashboardMobile />
-          ) : (
-            <ChangeAdminInfoDesk />
-          )
-        }
-      />
-
-      <Route
-        path="add-user"
-        element={
-          device === "mobile" ? <AdminDashboardMobile /> : <AddUserDesk />
-        }
-      />
-
-      <Route
-        path="user-management"
-        element={
-          device === "mobile" ? (
-            <AdminDashboardMobile />
-          ) : (
-            <UserManagementDesk />
-          )
-        }
-      />
+      <Route path="admin-main" element={<AdminMainDesk />} />
+      <Route path="change-admin-info" element={<ChangeAdminInfoDesk />} />
+      <Route path="add-user" element={<AddUserDesk />} />
+      <Route path="user-management" element={<UserManagementDesk />} />
     </Routes>
   );
 }

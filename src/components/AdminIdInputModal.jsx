@@ -38,9 +38,8 @@ export default function AdminIdInputModal() {
         </div>
         <div className="flex justify-center">
           <button
-            className="bg-gray-400 text-white py-1 px-4 rounded"
-            onClick={handleLogin}
-          >
+            className="cursor-pointer bg-[#44A4FA] text-white py-1 px-4 rounded"
+            onClick={handleLogin}>
             확인
           </button>
         </div>
