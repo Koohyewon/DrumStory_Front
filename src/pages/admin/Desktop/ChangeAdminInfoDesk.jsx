@@ -70,7 +70,7 @@ export default function ChangeAdminInfoDesk() {
 
           <div className="flex justify-between mt-20 font-bold">
             {/* 취소 버튼 */}
-            <CancelButton link="/admin/admin-main" />
+            <CancelButton link="/admin" />
 
             {/* 설정 버튼 */}
             <div className="ml-10">

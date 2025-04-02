@@ -1,44 +1,60 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import InputField from "../../../components/InputField";
 import CancelButton from "../../../components/CancelButton";
 import ActionButton from "../../../components/ActionButton";
 import axios from "../../../api/axiosInstance";
 
-export default function AddUserDesk() {
+export default function EditUserDesk() {
   const navigate = useNavigate();
-  const [addUserForm, setAddUserForm] = useState({
+  const location = useLocation();
+  const userData = location.state?.user;
+
+  const [editUserForm, setEditUserForm] = useState({
     userName: "",
     userPhone: "",
     userId: "",
+    beforeUserId: "",
   });
+
+  useEffect(() => {
+    if (userData) {
+      setEditUserForm({
+        userName: userData.name || "",
+        userPhone: userData.phoneNumber || "",
+        userId: userData.memberNum || "",
+        beforeUserId: userData.memberNum || "",
+      });
+    }
+  }, [userData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAddUserForm((prev) => ({
+    setEditUserForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const addUser = async () => {
+  const editUser = async () => {
     if (
-      !addUserForm.userName ||
-      !addUserForm.userPhone ||
-      !addUserForm.userId
+      !editUserForm.userName ||
+      !editUserForm.userPhone ||
+      !editUserForm.userId
     ) {
       return;
     }
 
     const data = {
-      name: addUserForm.userName,
-      phoneNumber: addUserForm.userPhone,
-      memberNum: addUserForm.userId,
+      name: editUserForm.userName,
+      phoneNumber: editUserForm.userPhone,
+      memberNum: editUserForm.userId,
+      oldMemberNum: editUserForm.beforeUserId,
     };
 
     try {
-      await axios.post("/admin/member/add", data);
+      await axios.put("/admin/member/update", data);
       navigate("/admin/user-management");
     } catch (error) {
       console.log(error);
@@ -50,13 +66,13 @@ export default function AddUserDesk() {
 
   // 모든 입력 필드가 채워져 있는지 확인
   const isFormValid =
-    addUserForm.userName && addUserForm.userPhone && addUserForm.userId;
+    editUserForm.userName && editUserForm.userPhone && editUserForm.userId;
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* 헤더 */}
       <div className="text-center py-7.5 text-[35px] font-bold border-b border-gray-300 w-full">
-        회원 추가
+        회원 수정
       </div>
 
       <div className="flex flex-col items-center justify-center flex-grow">
@@ -65,7 +81,7 @@ export default function AddUserDesk() {
           label="회원 이름"
           name="userName"
           placeholder="홍길동"
-          value={addUserForm.userName}
+          value={editUserForm.userName}
           onChange={handleChange}
         />
 
@@ -73,7 +89,7 @@ export default function AddUserDesk() {
           label="회원 전화번호"
           name="userPhone"
           placeholder="01012345678"
-          value={addUserForm.userPhone}
+          value={editUserForm.userPhone}
           onChange={handleChange}
         />
 
@@ -81,7 +97,7 @@ export default function AddUserDesk() {
           label="회원 번호(ID)"
           name="userId"
           placeholder="0000"
-          value={addUserForm.userId}
+          value={editUserForm.userId}
           onChange={handleChange}
         />
 
@@ -89,11 +105,11 @@ export default function AddUserDesk() {
           {/* 취소 버튼 */}
           <CancelButton link="/admin/user-management" />
 
-          {/* 추가 버튼 (비활성화 처리) */}
+          {/* 수정 버튼 (비활성화 처리) */}
           <div className="ml-10">
             <ActionButton
-              text="추가"
-              onClick={addUser}
+              text="수정"
+              onClick={editUser}
               disabled={!isFormValid}
             />
           </div>

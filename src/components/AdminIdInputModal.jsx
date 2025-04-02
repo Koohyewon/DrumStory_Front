@@ -15,7 +15,7 @@ export default function AdminIdInputModal() {
       localStorage.setItem("Token", Token);
       localStorage.setItem("Role", Role);
 
-      navigate("/admin/admin-main");
+      navigate("/admin");
     } catch (err) {
       console.log(err);
     }

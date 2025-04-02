@@ -5,6 +5,7 @@ import AdminMainDesk from "../pages/admin/Desktop/AdminMainDesk";
 import ChangeAdminInfoDesk from "../pages/admin/Desktop/ChangeAdminInfoDesk";
 import AddUserDesk from "../pages/admin/Desktop/AddUserDesk";
 import UserManagementDesk from "../pages/admin/Desktop/UserManagementDesk";
+import EditUserDesk from "../pages/admin/Desktop/EditUserDesk";
 
 export default function AdminRoutes() {
   const device = useDevice();
@@ -18,10 +19,11 @@ export default function AdminRoutes() {
         }
       /> */}
 
-      <Route path="admin-main" element={<AdminMainDesk />} />
-      <Route path="change-admin-info" element={<ChangeAdminInfoDesk />} />
-      <Route path="add-user" element={<AddUserDesk />} />
-      <Route path="user-management" element={<UserManagementDesk />} />
+      <Route path="/" element={<AdminMainDesk />} />
+      <Route path="/change-admin-info" element={<ChangeAdminInfoDesk />} />
+      <Route path="/add-user" element={<AddUserDesk />} />
+      <Route path="/user-management" element={<UserManagementDesk />} />
+      <Route path="/edit-user" element={<EditUserDesk />} />
     </Routes>
   );
 }
