@@ -11,10 +11,10 @@ export default function MainDesk() {
   const bookedSlots = [
     { room: 1, hour: 9, minute: 0, day: 1 },
     { room: 1, hour: 13, minute: 30, day: 1 },
-    { room: 2, hour: 14, minute: 30, day: 2 },
-    { room: 3, hour: 9, minute: 0, day: 3 },
-    { room: 4, hour: 11, minute: 30, day: 4 },
-    { room: 1, hour: 9, minute: 30, day: 3 },
+    { room: 2, hour: 14, minute: 30, day: 1 },
+    { room: 3, hour: 9, minute: 0, day: 1 },
+    { room: 4, hour: 11, minute: 30, day: 1 },
+    { room: 1, hour: 9, minute: 30, day: 1 },
   ];
 
   const handleAdminMode = () => {
@@ -40,9 +40,9 @@ export default function MainDesk() {
     );
   };
 
-  const isSelected = (room, hour, minute, day) => {
-    return selectedSlots.includes(`${room}-${hour}-${minute}-${day}`);
-  };
+  // const isSelected = (room, hour, minute, day) => {
+  //   return selectedSlots.includes(`${room}-${hour}-${minute}-${day}`);
+  // };
 
   // 날짜 포맷팅 함수
   const formatDate = (date) => {
@@ -85,7 +85,7 @@ export default function MainDesk() {
         </div>
 
         {/* 메인 컨텐츠 영역 */}
-        <div className="flex-1 p-6 pb-20 flex flex-col">
+        <div className="flex-1 pt-6 px-13 pb-20 flex flex-col">
           {/* 날짜 표시 */}
           <div className="flex justify-center mt-4 mb-8">
             <div className="text-3xl font-semibold">
@@ -118,11 +118,7 @@ export default function MainDesk() {
                       <td
                         key={`${room}-${hour}-${minute}`}
                         className={`border-2 border-[#DDDDDD] p-4 cursor-pointer ${
-                          isBooked(room, hour, minute, 1)
-                            ? "bg-red-100"
-                            : isSelected(room, hour, minute, 1)
-                            ? "bg-blue-100"
-                            : ""
+                          isBooked(room, hour, minute, 1) && "bg-red-100"
                         }`}
                         onClick={() =>
                           handleSlotClick(room, hour, minute, 1)
