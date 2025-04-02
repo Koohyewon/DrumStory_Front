@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 const CalendarSchedule = () => {
-  // Get current date and calculate week dates
+  // 현재 날짜, 일주일 계산
   const [currentDate] = useState(new Date());
   const [weekDates, setWeekDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimes, setSelectedTimes] = useState(["4:00", "4:30"]);
 
   useEffect(() => {
-    // Generate 7 days starting from today
+    // 현재 날짜로부터 7일
     const dates = [];
     const days = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -24,7 +24,6 @@ const CalendarSchedule = () => {
     }
 
     setWeekDates(dates);
-    // Set first day as selected by default
     setSelectedDate(dates[0].date);
   }, [currentDate]);
 
@@ -36,21 +35,18 @@ const CalendarSchedule = () => {
     }
   };
 
-  // Morning time slots arranged in 3 rows of 8
   const morningTimeRows = [
     ["00:00", "00:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30"],
     ["4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30"],
     ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"],
   ];
 
-  // Afternoon time slots arranged in 3 rows of 8
   const afternoonTimeRows = [
     ["12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30"],
     ["4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30"],
     ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"],
   ];
 
-  // Format date for display
   const formatMonthYear = () => {
     if (weekDates.length === 0) return "";
     const date = weekDates[0].fullDate;
@@ -80,16 +76,13 @@ const CalendarSchedule = () => {
         <div className="text-blue-900 font-medium">노주휘님</div>
       </div>
 
-      {/* Days of the week and dates */}
       <div className="grid grid-cols-7 text-center border-t border-b border-gray-200">
-        {/* Days of week */}
         {weekDates.map((dateObj, index) => (
           <div key={`day-${index}`} className="py-2 text-xs">
             {dateObj.day}
           </div>
         ))}
 
-        {/* Dates */}
         {weekDates.map((dateObj, index) => (
           <div
             key={`date-${index}`}
@@ -108,7 +101,7 @@ const CalendarSchedule = () => {
         ))}
       </div>
 
-      {/* Morning time selection */}
+      {/* 오전 */}
       <div className="p-4">
         <div className="flex justify-between items-center mb-2">
           <div className="text-base">오전</div>
@@ -132,7 +125,7 @@ const CalendarSchedule = () => {
         ))}
       </div>
 
-      {/* Afternoon time selection */}
+      {/* 오후 */}
       <div className="p-4">
         <div className="text-base mb-2">오후</div>
 
@@ -159,7 +152,6 @@ const CalendarSchedule = () => {
         ))}
       </div>
 
-      {/* Submit button */}
       <div className="p-4 flex justify-center">
         <button className="w-full py-3 bg-blue-900 text-white rounded text-lg font-medium">
           선택
