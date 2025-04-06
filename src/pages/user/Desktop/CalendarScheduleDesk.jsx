@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
+import { IoIosArrowBack } from "react-icons/io";
 
 const CalendarSchedule = () => {
   const navigate = useNavigate();
@@ -38,7 +39,9 @@ const CalendarSchedule = () => {
       const date = new Date(currentDate);
       date.setDate(currentDate.getDate() + i);
 
-      const formatted = date.toISOString().split("T")[0];
+      const formatted = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
       dates.push({
         date: date.getDate(),
@@ -87,10 +90,10 @@ const CalendarSchedule = () => {
         onClick={() => {
           if (isAvailable) handleTimeSelection(timeObj);
         }}
-        className={`py-2 rounded border text-center text-sm ${
+        className={`cursor-pointer py-2.5 rounded border text-center text-sm ${
           isAvailable
             ? isSelected
-              ? "bg-blue-900 text-white border-blue-900"
+              ? "bg-[#44A4FA] text-white font-bold"
               : "border-gray-200 text-black"
             : "bg-gray-200 text-gray-400 cursor-not-allowed"
         }`}>
@@ -139,32 +142,23 @@ const CalendarSchedule = () => {
   return (
     <div className="w-full min-h-screen bg-white border border-gray-200">
       {/* Header */}
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 text-xl font-bold">
         <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <button onClick={() => navigate(-1)}>
+            <IoIosArrowBack size={38} />
+          </button>
         </div>
-        <div className="text-lg font-medium">{formatMonthYear()}</div>
-        <div className="text-blue-900 font-medium">
-          {memberData?.name || "회원"}님
-        </div>
+        <div>{formatMonthYear()}</div>
+        <p>
+          {memberData?.name || "회원"}
+          <span className="font-medium">님</span>
+        </p>
       </div>
 
       {/* 요일 헤더 */}
-      <div className="grid grid-cols-7 text-center border-t border-b border-gray-200">
+      <div className="grid grid-cols-7 text-center border-b border-gray-200 py-4">
         {weekDates.map((dateObj, index) => (
-          <div key={`day-${index}`} className="py-2 text-xs">
+          <div key={`day-${index}`} className="py-2 text-xs font-bold">
             {dateObj.day}
           </div>
         ))}
@@ -174,14 +168,14 @@ const CalendarSchedule = () => {
             className="relative py-4 cursor-pointer"
             onClick={() => setSelectedDate(dateObj.formattedDate)}>
             {dateObj.formattedDate === selectedDate && (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-blue-900 rounded-full"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-[#44A4FA] rounded-full"></div>
             )}
             <div
               className={`relative z-10 ${
                 dateObj.formattedDate === selectedDate
                   ? "text-white"
                   : "text-black"
-              } font-medium`}>
+              } text-xl font-bold`}>
               {dateObj.date}
             </div>
           </div>
@@ -189,39 +183,45 @@ const CalendarSchedule = () => {
       </div>
 
       {/* 오전 */}
-      <div className="p-4">
+      <div className="py-11 px-17">
         <div className="flex justify-between items-center mb-2">
-          <div className="text-base">오전</div>
-          <div className="text-xs text-gray-500">
-            *연속 2타임까지만 예약 가능(최대 1시간)
+          <div className="font-bold text-2xl mb-7">오전</div>
+          <div className="text-xs font-bold text-gray-500">
+            * 연속 2타임까지만 예약 가능(최대 1시간)
           </div>
         </div>
 
         {morningTimeRows.map((row, rowIndex) => (
           <div
             key={`morning-row-${rowIndex}`}
-            className="grid grid-cols-8 gap-2 mb-2">
+            className="grid grid-cols-8 gap-5 mb-2">
             {row.map((time) => renderTimeButton(time))}
           </div>
         ))}
       </div>
 
       {/* 오후 */}
-      <div className="p-4">
-        <div className="text-base mb-2">오후</div>
+      <div className="py-4 px-17">
+        <div className="font-bold text-2xl mb-7">오후</div>
 
         {afternoonTimeRows.map((row, rowIndex) => (
           <div
             key={`afternoon-row-${rowIndex}`}
-            className="grid grid-cols-8 gap-2 mb-2">
+            className="grid grid-cols-8 gap-5 mb-2">
             {row.map((time) => renderTimeButton(time))}
           </div>
         ))}
       </div>
 
-      <div className="p-4 flex justify-center">
+      <div className="my-15 flex justify-center">
         <button
-          className="w-full py-3 bg-blue-900 text-white rounded text-lg font-medium"
+          disabled={selectedTimes.length === 0} // 비어있으면 비활성화
+          className={`w-[250px] py-3 rounded-xl text-xl font-bold transition-colors duration-200
+      ${
+        selectedTimes.length === 0
+          ? "bg-white text-gray-400 border border-gray-300 cursor-not-allowed"
+          : "bg-[#44A4FA] text-white cursor-pointer"
+      }`}
           onClick={handleSelect}>
           선택
         </button>

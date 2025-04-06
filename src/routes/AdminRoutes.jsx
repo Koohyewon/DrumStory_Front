@@ -6,6 +6,7 @@ import ChangeAdminInfoDesk from "../pages/admin/Desktop/ChangeAdminInfoDesk";
 import AddUserDesk from "../pages/admin/Desktop/AddUserDesk";
 import UserManagementDesk from "../pages/admin/Desktop/UserManagementDesk";
 import EditUserDesk from "../pages/admin/Desktop/EditUserDesk";
+import ReservationManagement from "../pages/admin/Desktop/ReservationManagement";
 
 export default function AdminRoutes() {
   const device = useDevice();
@@ -24,6 +25,10 @@ export default function AdminRoutes() {
       <Route path="/add-user" element={<AddUserDesk />} />
       <Route path="/user-management" element={<UserManagementDesk />} />
       <Route path="/edit-user" element={<EditUserDesk />} />
+      <Route
+        path="/reservation-management"
+        element={<ReservationManagement />}
+      />
     </Routes>
   );
 }

@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export default function RoomAvailable() {
   const location = useLocation();
   const navigate = useNavigate();
-  const memberData = location.state?.passData;
+  const memberData = location.state?.passData || {}; // 기본값 제공
 
   const [availableRooms, setAvailableRooms] = useState([]);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -23,8 +23,8 @@ export default function RoomAvailable() {
 
     try {
       const data = {
-        resTimeIds: memberData.selectTimes.map((time) => time.id),
-        resDate: memberData.resDate,
+        resTimeIds: memberData.selectTimes?.map((time) => time.id) || [],
+        resDate: memberData.resDate || "",
         roomId: selectedRoomId,
       };
 
@@ -32,7 +32,7 @@ export default function RoomAvailable() {
 
       const passData = response.data;
       console.log(response);
-      if (response.status == 201) {
+      if (response.status === 201) {
         navigate("/reservation-success", { state: { passData } });
       }
     } catch (error) {
@@ -41,45 +41,56 @@ export default function RoomAvailable() {
   };
 
   const formatDateWithDay = (dateStr) => {
-    const date = new Date(dateStr);
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-    const formattedDate = dateStr.replaceAll("-", ".");
-    const day = days[date.getDay()];
-    return `${formattedDate}(${day})`;
+    if (!dateStr) return "날짜 정보 없음";
+
+    try {
+      const date = new Date(dateStr);
+      const days = ["일", "월", "화", "수", "목", "금", "토"];
+      const formattedDate = dateStr.replaceAll("-", ".");
+      const day = days[date.getDay()];
+      return `${formattedDate}(${day})`;
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return dateStr; // 포맷팅 실패 시 원본 반환
+    }
   };
 
   useEffect(() => {
     const fetchAvailableRooms = async () => {
       setIsLoading(true);
       try {
-        if (memberData?.resDate && memberData?.selectTimes) {
+        if (memberData?.resDate && memberData?.selectTimes?.length > 0) {
           const data = {
             resDate: memberData.resDate,
             resTimeIds: memberData.selectTimes.map((time) => time.id),
           };
 
           const response = await axios.post("/reservation/room", data);
-          setAvailableRooms(response.data);
+          console.log("API response:", response.data);
 
-          const mockResponse = {
-            data: [
-              { roomNum: "1번 방", id: 1 },
-              { roomNum: "2번 방", id: 2 },
-              { roomNum: "3번 방", id: 3 },
-              { roomNum: "4번 방", id: 4 },
-              { roomNum: "5번 방", id: 5 },
-            ],
-          };
-
-          setAvailableRooms(mockResponse.data);
+          // API 응답 구조가 { name, availableRooms } 형태임
+          if (response.data && Array.isArray(response.data.availableRooms)) {
+            setAvailableRooms(response.data.availableRooms);
+          } else {
+            console.error(
+              "API response structure is unexpected:",
+              response.data
+            );
+            setAvailableRooms([]);
+          }
+        } else {
+          console.warn("Missing required data for fetching rooms");
+          setAvailableRooms([]);
         }
       } catch (error) {
         console.error("Error fetching available rooms:", error);
+        setAvailableRooms([]);
       } finally {
         setIsLoading(false);
       }
     };
-    console.log(memberData);
+
+    console.log("Member data:", memberData);
     fetchAvailableRooms();
   }, [memberData]);
 
@@ -94,17 +105,47 @@ export default function RoomAvailable() {
     { name: "Lobby", position: 7, alwaysDisabled: true },
   ];
 
+  // 이용 가능한 방을 기준으로 roomOptions 생성
   const roomOptions = allRooms.map((room) => {
-    const availableRoom = availableRooms.find((r) => r.roomNum === room.name);
+    // 상담실, 로비, 레슨 룸은 항상 비활성화
+    if (room.alwaysDisabled) {
+      return {
+        id: null,
+        name: room.name,
+        position: room.position,
+        disabled: true,
+      };
+    }
+
+    // 이용 가능한 방 중에서 현재 방이 있는지 확인
+    const availableRoom = availableRooms.find((r) => r?.roomNum === room.name);
+
     return {
       id: availableRoom?.id || null,
       name: room.name,
       position: room.position,
-      disabled: room.alwaysDisabled || !availableRoom,
+      disabled: !availableRoom, // 이용 가능한 방 목록에 없으면 비활성화
     };
   });
 
-  roomOptions.sort((a, b) => a.position - b.position);
+  // 방 위치에 따라 정렬
+  const sortedRoomOptions = [...roomOptions].sort(
+    (a, b) => (a?.position || 0) - (b?.position || 0)
+  );
+
+  // memberData가 없을 경우 안내 메시지 표시
+  if (!memberData.resDate || !memberData.selectTimes) {
+    return (
+      <div className="w-full h-screen flex flex-col items-center justify-center bg-white">
+        <p>필요한 예약 정보가 없습니다. 이전 페이지로 돌아가세요.</p>
+        <button
+          onClick={() => navigate(-1)}
+          className="mt-4 bg-[#44A4FA] text-white px-6 py-2 rounded-lg">
+          이전으로
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-screen flex flex-col bg-white">
@@ -122,34 +163,31 @@ export default function RoomAvailable() {
 
         <div className="text-center">
           <p>예약 시간</p>
-          {memberData && memberData.selectTimes?.length >= 2 ? (
-            <p className="text-lg mt-3">
-              {formatDateWithDay(memberData.resDate)} {memberData.startTime} ~{" "}
-              {memberData.endTime}
-            </p>
-          ) : (
-            <p className="text-lg mt-3 text-gray-400">예약 정보 없음</p>
-          )}
+
+          <p className="text-lg mt-3">
+            {formatDateWithDay(memberData.resDate)} {memberData.startTime || ""}{" "}
+            ~ {memberData.endTime || ""}
+          </p>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-center items-center px-6">
-        <p className="font-semibold text-lg mb-4 self-start">연습실 선택</p>
-
-        {isLoading ? (
-          <div className="flex justify-center items-center h-40">
-            <p>로딩 중...</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-xl">
-            {roomOptions.map((room) => (
-              <button
-                key={room.position}
-                onClick={() => handleSelect(room)}
-                disabled={room.disabled}
-                className={`
-                  rounded-lg px-4 py-6 text-sm font-medium border text-center
+      <div className="flex-1 flex flex-col justify-center px-20">
+        <p className="font-bold text-lg mb-13">연습실 선택</p>
+        <div className="flex flex-col items-center px-6">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-40">
+              <p>로딩 중...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-7 w-full h-70 ">
+              {sortedRoomOptions.map((room) => (
+                <button
+                  key={room.position}
+                  onClick={() => handleSelect(room)}
+                  disabled={room.disabled}
+                  className={`
+                  rounded-lg px-4 py-6 text-xl font-medium border text-center
                   ${
                     room.disabled
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -158,18 +196,24 @@ export default function RoomAvailable() {
                       : "bg-white hover:bg-blue-100"
                   }
                 `}>
-                {room.name}
-              </button>
-            ))}
-          </div>
-        )}
+                  {room.name}
+                </button>
+              ))}
+            </div>
+          )}
 
-        <button
-          onClick={handleSubmit}
-          className="mt-8 bg-[#44A4FA] text-white px-8 py-3 rounded-lg font-semibold w-32 disabled:opacity-50"
-          disabled={selectedRoomId === null}>
-          선택
-        </button>
+          <button
+            onClick={handleSubmit}
+            disabled={selectedRoomId === null}
+            className={`mt-25 rounded-xl text-xl font-bold w-[250px] py-3 transition-colors duration-200
+            ${
+              selectedRoomId === null
+                ? "bg-white text-gray-400 border border-gray-300 cursor-not-allowed"
+                : "bg-[#44A4FA] text-white cursor-pointer"
+            }`}>
+            선택
+          </button>
+        </div>
       </div>
     </div>
   );
