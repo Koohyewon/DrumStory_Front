@@ -1,10 +1,13 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { IoIosArrowBack } from "react-icons/io";
 
 export default function ReservationConfirmDesk() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const memberData = location.state?.memberData;
+
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8 pt-8 pb-20">
@@ -14,11 +17,14 @@ export default function ReservationConfirmDesk() {
           <IoIosArrowBack className="text-gray-700" size={50} />
         </button>
         <div className="flex-grow flex flex-col items-center justify-center font-bold text-gray-800">
-          <p className="mb-15 text-2xl">노주희 님의 예약 정보</p>
+          <p className="mb-15 text-2xl">
+            {memberData.name || memberData.reservationInfo.name} 님의 예약 정보
+          </p>
           <div className="border-3 px-15 py-12 text-center rounded-xl">
             <p className="text-xl">
-              <span className="mr-7 text-2xl">1번 방</span>
-              2025.02.20(목) 오후 4:00 ~ 오후 5:00
+              <span className="mr-7 text-2xl">{memberData.roomNum}</span>
+              2025.02.20(목) {memberData.reservationInfo.startTime} ~{" "}
+              {memberData.reservationInfo.endTime}
             </p>
           </div>
         </div>

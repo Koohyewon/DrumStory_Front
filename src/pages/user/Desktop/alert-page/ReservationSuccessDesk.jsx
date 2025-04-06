@@ -1,29 +1,41 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { IoIosArrowBack } from "react-icons/io";
 
 export default function ReservationSuccessDesk() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const memberData = location.state?.passData;
+
+  const formatDateWithDay = (dateStr) => {
+    const date = new Date(dateStr);
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+    const formattedDate = dateStr.replaceAll("-", ".");
+    const day = days[date.getDay()];
+    return `${formattedDate}(${day})`;
+  };
+
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8 pt-8 pb-20">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="self-start p-2 cursor-pointer">
           <IoIosArrowBack className="text-gray-700" size={50} />
         </button>
 
         <div className="flex-grow flex flex-col items-center justify-center font-bold text-gray-800">
           <p className="mb-25 text-2xl text-[#44A4FA]">
-            노주희님 예약이 완료되었습니다
+            {memberData.name}님 예약이 완료되었습니다
           </p>
 
           <p className="text-xl mb-5">예약 정보</p>
 
           <p className="text-lg">
-            <span className="mr-7 text-xl">1번 방</span>
-            2025.02.20(목) 오후 4:00 ~ 오후 5:00
+            <span className="mr-7 text-xl">{memberData.roomNum}</span>
+            {formatDateWithDay(memberData.resDate)} {memberData.startTime} ~{" "}
+            {memberData.endTime}
           </p>
 
           <p className="mt-20 bg-[#D9D9D9]/[.45] min-w-[500px] px-13 py-6 text-center rounded-lg text-md">

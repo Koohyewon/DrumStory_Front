@@ -7,6 +7,7 @@ import NoCheckInDesk from "../pages/user/Desktop/alert-page/NoCheckInDesk";
 import CheckOutCompleteDesk from "../pages/user/Desktop/alert-page/CheckOutCompleteDesk";
 import ReservationConfirmDesk from "../pages/user/Desktop/alert-page/ReservationConfirmDesk";
 import ReservationSuccessDesk from "../pages/user/Desktop/alert-page/ReservationSuccessDesk";
+import RoomAvailable from "../pages/user/Desktop/RoomAvailable";
 
 export default function UserRoutes() {
   const device = useDevice();
@@ -23,6 +24,7 @@ export default function UserRoutes() {
       <Route path="/checkout" element={<CheckOutCompleteDesk />} />
       <Route path="/reservation" element={<ReservationConfirmDesk />} />
       <Route path="/reservation-success" element={<ReservationSuccessDesk />} />
+      <Route path="/room" element={<RoomAvailable />} />
     </Routes>
   );
 }
