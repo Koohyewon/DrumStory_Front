@@ -11,7 +11,7 @@ export default function CheckOutCompleteDesk() {
   const memberData = location.state?.memberData;
 
   const handleConfirm = () => {
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function CheckOutCompleteDesk() {
     <>
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8 pt-8 pb-20">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/", { replace: true })}
           className="self-start p-2 cursor-pointer">
           <IoIosArrowBack className="text-gray-700" size={50} />
         </button>

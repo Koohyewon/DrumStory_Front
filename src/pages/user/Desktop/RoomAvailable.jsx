@@ -33,7 +33,10 @@ export default function RoomAvailable() {
       const passData = response.data;
       console.log(response);
       if (response.status === 201) {
-        navigate("/reservation-success", { state: { passData } });
+        navigate("/reservation-success", {
+          state: { passData },
+          replace: true,
+        });
       }
     } catch (error) {
       console.error("Error submitting reservation:", error);
@@ -139,7 +142,7 @@ export default function RoomAvailable() {
       <div className="w-full h-screen flex flex-col items-center justify-center bg-white">
         <p>필요한 예약 정보가 없습니다. 이전 페이지로 돌아가세요.</p>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(-1, { replace: true })}
           className="mt-4 bg-[#44A4FA] text-white px-6 py-2 rounded-lg">
           이전으로
         </button>
@@ -152,7 +155,9 @@ export default function RoomAvailable() {
       {/* Header */}
       <div className="text-xl font-bold border-b-2 border-black/[.2] pb-6">
         <div className="flex justify-between pt-7 px-7">
-          <button className="text-lg" onClick={() => navigate(-1)}>
+          <button
+            className="text-lg"
+            onClick={() => navigate(-1, { replace: true })}>
             <IoIosArrowBack size={38} />
           </button>
           <p>
@@ -180,7 +185,7 @@ export default function RoomAvailable() {
               <p>로딩 중...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-7 w-full h-70 ">
+            <div className="grid grid-cols-4 gap-7 w-full h-70 ">
               {sortedRoomOptions.map((room) => (
                 <button
                   key={room.position}

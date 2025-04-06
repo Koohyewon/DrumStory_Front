@@ -132,6 +132,7 @@ const CalendarSchedule = () => {
         console.log(passData);
         navigate("/room", {
           state: { passData },
+          replace: true,
         });
       }
     } catch (error) {
@@ -144,7 +145,7 @@ const CalendarSchedule = () => {
       {/* Header */}
       <div className="flex justify-between items-center p-4 text-xl font-bold">
         <div>
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => navigate("/", { replace: true })}>
             <IoIosArrowBack size={38} />
           </button>
         </div>

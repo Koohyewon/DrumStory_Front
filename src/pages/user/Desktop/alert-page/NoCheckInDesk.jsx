@@ -8,7 +8,7 @@ export default function NoCheckInDesk() {
   const memberData = location.state?.memberData; // Fallback if no data
 
   const handleConfirm = () => {
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function NoCheckInDesk() {
     <>
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8 pt-8 pb-20">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/", { replace: true })}
           className="self-start p-2 cursor-pointer">
           <IoIosArrowBack className="text-gray-700" size={50} />
         </button>

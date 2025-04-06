@@ -36,7 +36,7 @@ export default function ReservationSuccessDesk() {
     <>
       <div className="flex flex-col items-center justify-center h-screen bg-white px-8 pt-8 pb-20">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/", { replace: true })}
           className="self-start p-2 cursor-pointer">
           <IoIosArrowBack className="text-gray-700" size={50} />
         </button>
@@ -70,7 +70,6 @@ export default function ReservationSuccessDesk() {
         isOpen={showCancelModal}
         onClose={() => setShowCancelModal(false)}
         onConfirm={handleDeleteRes}
-        userName={memberData.name}
       />
     </>
   );
