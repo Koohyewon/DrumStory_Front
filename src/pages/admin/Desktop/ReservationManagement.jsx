@@ -118,11 +118,11 @@ export default function ReservationManagement() {
       </div>
 
       {/* 스케줄표 */}
-      <div className="flex-1 overflow-y-auto mt-6 px-4 pb-20">
+      <div className="flex-1 overflow-y-auto mt-6 px-10 pb-20">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 bg-white z-10">
             <tr className="bg-gray-100">
-              <th className="border-2 border-[#DDDDDD] py-6 w-24"></th>
+              <th className="border-2 border-[#DDDDDD] py-7 w-28"></th>
               {rooms.map((room) => (
                 <th
                   key={room}
@@ -135,7 +135,7 @@ export default function ReservationManagement() {
           <tbody>
             {timeSlots.map(({ hour, minute }) => (
               <tr key={`${hour}-${minute}`}>
-                <td className="border-2 border-[#DDDDDD] text-[#747474] text-center font-bold py-2">
+                <td className="border-2 border-[#DDDDDD] text-[#747474] text-center font-bold py-3">
                   {`${String(hour).padStart(2, "0")}:${String(minute).padStart(
                     2,
                     "0"
@@ -149,7 +149,7 @@ export default function ReservationManagement() {
                   return (
                     <td
                       key={`${room}-${hour}-${minute}`}
-                      className={`border-2 border-[#DDDDDD] p-2 cursor-pointer ${
+                      className={`border-2 border-[#DDDDDD] p-4 cursor-pointer ${
                         isSelected
                           ? "bg-[#FC7B7B] text-white"
                           : bookedSlot
