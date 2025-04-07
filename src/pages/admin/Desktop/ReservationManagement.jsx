@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-import axios from "../../../api/axiosInstance";
+import AdminResCancelModal from "../../../components/AdminResCancelModal";
+import axios from "./../../../api/axiosInstance";
 
 export default function ReservationManagement() {
   const navigate = useNavigate();
@@ -10,10 +11,10 @@ export default function ReservationManagement() {
   const [weekDates, setWeekDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [reservationData, setReservationData] = useState([]);
-  const [selectedReservationId, setSelectedReservationId] = useState(null);
+  const [selectedReservation, setSelectedReservation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ 모달 상태 추가
 
   const rooms = [1, 2, 3, 4, 5];
-
   const timeSlots = [];
   for (let hour = 0; hour < 24; hour++) {
     timeSlots.push({ hour, minute: 0 });
@@ -25,7 +26,7 @@ export default function ReservationManagement() {
       try {
         const data = { resDate: selectedDate };
         const response = await axios.post("/admin/reservation", data);
-        setReservationData(response.data); // 예약 데이터 저장
+        setReservationData(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -63,7 +64,6 @@ export default function ReservationManagement() {
     return `${date.getFullYear()}.${date.getMonth() + 1}`;
   };
 
-  //예약 여부 확인 함수
   const isSlotBooked = (room, hour, minute) => {
     const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(
       2,
@@ -74,9 +74,25 @@ export default function ReservationManagement() {
     );
   };
 
-  const handleBookedSlotClick = (id) => {
-    console.log("예약 ID:", id);
-    setSelectedReservationId(id);
+  const handleBookedSlotClick = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsModalOpen(true);
+  };
+
+  const handleCancelReservation = async () => {
+    try {
+      const data = { id: selectedReservation.id };
+      console.log(data);
+      const response = await axios.delete("/admin/reservation/delete", {
+        data: data,
+      }); // 삭제 요청
+
+      console.log(response.data);
+      setIsModalOpen(false);
+      // window.location.reload();
+    } catch (error) {
+      console.error("삭제 실패:", error);
+    }
   };
 
   return (
@@ -144,7 +160,7 @@ export default function ReservationManagement() {
                 {rooms.map((room) => {
                   const bookedSlot = isSlotBooked(room, hour, minute);
                   const isSelected =
-                    bookedSlot && bookedSlot.id === selectedReservationId;
+                    bookedSlot && selectedReservation?.id === bookedSlot.id;
 
                   return (
                     <td
@@ -157,7 +173,7 @@ export default function ReservationManagement() {
                           : "bg-white"
                       }`}
                       onClick={() =>
-                        bookedSlot && handleBookedSlotClick(bookedSlot.id)
+                        bookedSlot && handleBookedSlotClick(bookedSlot)
                       }>
                       {bookedSlot && (
                         <div className="text-sm font-bold text-center">
@@ -172,6 +188,14 @@ export default function ReservationManagement() {
           </tbody>
         </table>
       </div>
+
+      {/* 예약 취소 모달 */}
+      <AdminResCancelModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleCancelReservation}
+        name={selectedReservation?.name}
+      />
     </div>
   );
 }
