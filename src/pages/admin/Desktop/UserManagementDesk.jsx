@@ -27,9 +27,9 @@ export default function UserManagementDesk() {
         }));
 
         setUsers(Users);
-        console.log(Users);
+        // console.log(Users);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
 
@@ -80,7 +80,7 @@ export default function UserManagementDesk() {
 
       alert("회원이 삭제되었습니다.");
     } catch (err) {
-      console.log(err);
+      console.error(err);
       alert("회원 삭제 중 오류가 발생했습니다.");
     }
   };

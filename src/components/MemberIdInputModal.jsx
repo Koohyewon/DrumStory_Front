@@ -25,7 +25,7 @@ export default function MemberIdInputModal({ onSuccess, onClose, purpose }) {
         name: response.data.name,
         reservationInfo: response.data.reservationInfo,
       };
-      console.log(memberData);
+      // console.log(memberData);
       // 토큰 및 역할 저장
       localStorage.setItem("Token", token);
       localStorage.setItem("Role", role);
@@ -33,7 +33,7 @@ export default function MemberIdInputModal({ onSuccess, onClose, purpose }) {
       // 로그인 성공 후 상위 컴포넌트에 알림 (예약 여부와 회원 데이터 전달)
       onSuccess(memberId, response.data.reservationInfo !== null, memberData);
 
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.message || "로그인에 실패했습니다");

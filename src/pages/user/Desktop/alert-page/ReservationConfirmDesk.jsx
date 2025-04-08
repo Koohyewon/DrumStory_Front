@@ -23,7 +23,7 @@ export default function ReservationConfirmDesk() {
   const handleDeleteRes = async () => {
     try {
       const response = await axios.delete("/reservation/delete");
-      console.log(response.status);
+      // console.log(response.status);
       if (response.status == 204) {
         navigate("/", { replace: true });
       }

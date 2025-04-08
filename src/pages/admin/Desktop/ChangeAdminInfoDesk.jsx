@@ -45,7 +45,7 @@ export default function ChangeAdminInfoDesk() {
       await axios.put("/admin/member/update", data);
       navigate("/admin");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

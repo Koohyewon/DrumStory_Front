@@ -41,7 +41,7 @@ export default function AddUserDesk() {
       await axios.post("/admin/member/add", data);
       navigate("/admin/user-management");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error.status == 409) {
         alert("이미 존재하는 회원번호입니다.");
       }

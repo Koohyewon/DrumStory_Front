@@ -18,7 +18,7 @@ export default function CheckOutCompleteDesk() {
     const deleteRes = async () => {
       try {
         const response = await axios.delete("/reservation/delete");
-        console.log(response.status);
+        // console.log(response.status);
       } catch (error) {
         console.error(error);
       }

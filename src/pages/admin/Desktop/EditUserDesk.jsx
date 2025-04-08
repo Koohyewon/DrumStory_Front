@@ -57,7 +57,7 @@ export default function EditUserDesk() {
       await axios.put("/admin/member/update", data);
       navigate("/admin/user-management");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error.status == 409) {
         alert("이미 존재하는 회원번호입니다.");
       }

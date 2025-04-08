@@ -20,7 +20,7 @@ const CalendarSchedule = () => {
         const data = { resDate: selectedDate };
         const response = await axios.post("/reservation", data);
         setAvailableTimes(response.data.availableTimes); // 받아온 시간대 저장
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         console.error("시간대 불러오기 실패", error);
       }
@@ -129,7 +129,7 @@ const CalendarSchedule = () => {
       const passData = response.data;
 
       if (response.status == 200) {
-        console.log(passData);
+        // console.log(passData);
         navigate("/room", {
           state: { passData },
           replace: true,

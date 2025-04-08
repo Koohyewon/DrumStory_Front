@@ -11,9 +11,9 @@ export default function NoCheckInDesk() {
     navigate("/", { replace: true });
   };
 
-  useEffect(() => {
-    console.log(memberData);
-  }, [memberData]);
+  // useEffect(() => {
+  //   console.log(memberData);
+  // }, [memberData]);
 
   return (
     <>

@@ -82,7 +82,7 @@ export default function ReservationManagement() {
   const handleCancelReservation = async () => {
     try {
       const data = { id: selectedReservation.id };
-      console.log(data);
+      // console.log(data);
       const response = await axios.delete("/admin/reservation/delete", {
         data: data,
       }); // 삭제 요청

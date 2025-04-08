@@ -31,7 +31,7 @@ export default function RoomAvailable() {
       const response = await axios.post("/reservation/room/selected", data);
 
       const passData = response.data;
-      console.log(response);
+      // console.log(response);
       if (response.status === 201) {
         navigate("/reservation-success", {
           state: { passData },
@@ -69,7 +69,7 @@ export default function RoomAvailable() {
           };
 
           const response = await axios.post("/reservation/room", data);
-          console.log("API response:", response.data);
+          // console.log("API response:", response.data);
 
           // API 응답 구조가 { name, availableRooms } 형태임
           if (response.data && Array.isArray(response.data.availableRooms)) {
@@ -93,7 +93,7 @@ export default function RoomAvailable() {
       }
     };
 
-    console.log("Member data:", memberData);
+    // console.log("Member data:", memberData);
     fetchAvailableRooms();
   }, [memberData]);
 
