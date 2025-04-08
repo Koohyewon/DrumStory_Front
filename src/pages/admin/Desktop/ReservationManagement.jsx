@@ -87,9 +87,8 @@ export default function ReservationManagement() {
         data: data,
       }); // 삭제 요청
 
-      console.log(response.data);
       setIsModalOpen(false);
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("삭제 실패:", error);
     }
