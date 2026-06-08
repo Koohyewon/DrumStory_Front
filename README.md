@@ -1,12 +1,64 @@
-# React + Vite
+# DrumStory — 드럼 연습실 예약 관리 시스템
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 개요
 
-Currently, two official plugins are available:
+드럼스토리는 드럼 연습실을 운영하는 소규모 업체를 위한 예약 관리 웹 애플리케이션입니다. 기존에 전화나 수기로 처리하던 예약을 디지털화하여, 회원이 키오스크(태블릿)에서 직접 날짜·시간·연습실을 선택하고 예약을 완료할 수 있도록 했습니다. 관리자는 별도 화면에서 회원 정보와 예약 현황을 조회·취소할 수 있습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+팀 구성은 백엔드 2명, 프론트엔드 1명(나)이며, 프론트엔드 전체를 단독으로 설계하고 구현했습니다.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 기술 스택
+
+| 분류 | 사용 기술 |
+|------|-----------|
+| 프레임워크 | React 19 + Vite 6 |
+| 라우팅 | React Router DOM v7 |
+| 스타일링 | Tailwind CSS v4 |
+| HTTP 통신 | Axios |
+| 아이콘 | React Icons |
+
+---
+
+## 내가 구현한 것
+
+프론트엔드 코드베이스 전체(라우터 구성, 모든 페이지, 공통 컴포넌트, API 연동 레이어)를 혼자 작성했습니다.
+
+### 예약 플로우
+
+사용자 예약은 네 단계로 흘러갑니다.
+
+1. **메인 화면** — 오늘 날짜의 전체 예약 현황을 5개 연습실 × 48개 시간대(30분 단위, 00:00~23:30) 표 형태로 보여줍니다. 페이지 진입 시 `/todayReservation/:date` API를 호출해 이미 예약된 슬롯을 빨간 배경으로 표시합니다.
+
+2. **시간대 선택** (`/timetable`) — 오늘부터 7일치 날짜를 탭으로 표시합니다. 날짜를 선택하면 `/reservation` POST로 해당 날짜의 예약 가능한 시간 목록을 받아 와, 불가 시간은 회색으로 비활성화합니다. 연속된 2타임(최대 1시간)까지만 선택할 수 있도록 인접 타임 검증 로직을 구현했습니다.
+
+3. **연습실 선택** (`/room`) — 앞서 선택한 날짜·시간대를 서버에 전달하면(`/reservation/time`) 실제 사용 가능한 방 목록이 내려옵니다. 고정 레이아웃(1~5번 방, Lesson Room, 상담실, Lobby)에서 서버 응답 기준으로 선택 가능/불가를 표시합니다.
+
+4. **예약 완료·취소** — 방을 선택하고 확인하면 `/reservation/room/selected`로 예약이 생성됩니다. 완료 화면에서 예약 정보(방 번호, 날짜, 시간)를 보여주고, 취소 버튼 클릭 시 확인 모달을 거쳐 `/reservation/delete`로 삭제합니다.
+
+### 인증 처리
+
+별도의 로그인 페이지 없이, 회원 ID를 입력하는 모달에서 `/login` API를 호출합니다. 응답으로 받은 JWT 토큰과 역할(Role)을 `localStorage`에 저장하고, Axios 인터셉터가 이후 모든 요청 헤더에 자동으로 `Authorization`을 추가합니다. 401 응답이 오면 인터셉터가 로컬 스토리지를 비우고 메인 화면으로 리다이렉트합니다.
+
+관리자는 메인 화면 우상단 아이콘을 통해 관리자 ID 입력 모달로 진입합니다. 사용자 동선과 관리자 동선을 `/` 와 `/admin/*` 두 라우트 그룹으로 완전히 분리했습니다.
+
+### 퇴실 처리
+
+메인 화면의 '퇴실하기' 버튼도 동일한 회원 ID 입력 모달을 재활용합니다. 로그인 응답의 `reservationInfo` 유무로 현재 예약이 있는지 판단하고, 예약이 없으면 `/no-checkin` 안내 페이지로, 있으면 `/checkout`(퇴실 완료)으로 이동하면서 예약을 자동 삭제합니다.
+
+### 관리자 화면
+
+- **예약 관리** — 사용자 예약 현황과 동일한 구조의 시간표 뷰를 관리자용으로 구현했습니다. 예약된 셀에는 회원 이름이 표시되고, 클릭하면 해당 예약을 취소할 수 있는 모달이 뜹니다.
+- **회원 관리** — 전체 회원 목록을 테이블로 표시하며, 이름·회원번호·전화번호로 실시간 검색이 가능합니다. 체크박스로 회원을 선택한 뒤 추가·수정·삭제를 처리합니다.
+
+---
+
+## 배운 점
+
+**상태를 URL로 전달하는 패턴을 익혔습니다.** 예약 플로우가 여러 페이지에 걸쳐 있어서 날짜, 선택 시간, 회원 정보를 다음 페이지로 넘겨야 했는데, React Router의 `location.state`를 사용했습니다. 덕분에 전역 상태 관리 라이브러리 없이도 플로우를 깔끔하게 유지할 수 있었습니다.
+
+**공통 Axios 인스턴스의 가치를 경험했습니다.** 처음에는 개별 컴포넌트마다 헤더 설정을 넣으려 했는데, 인터셉터 하나로 인증과 토큰 만료 처리를 일괄 관리하니 각 API 호출 코드가 훨씬 단순해졌습니다.
+
+**백엔드 협업에서 API 응답 구조 합의의 중요성을 느꼈습니다.** 연습실 선택 화면에서 예상과 다른 응답 형태가 내려온 적이 있었는데, 이 경험 이후로 요청/응답 스펙을 사전에 확인하는 습관을 들이게 됐습니다.
+
+소규모 프로젝트였지만, 화면 설계부터 라우터 구성, API 연동, 예약 로직, 관리자 기능까지 프론트엔드 전반을 혼자 책임지면서 하나의 흐름을 처음부터 끝까지 완성하는 경험을 했습니다.
